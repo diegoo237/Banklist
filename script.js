@@ -223,9 +223,10 @@ const startLogOutTimer = function () {
   let time = 300;
   tick();
   const timer = setInterval(tick, 1000);
+  return timer;
 };
 
-let currentAccount;
+let currentAccount, timer;
 
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
@@ -259,11 +260,10 @@ btnLogin.addEventListener('click', function (e) {
 
     inputLoginUsername.value = inputLoginPin.value = '';
 
-    inputLoginPin.blur();
+    if (timer) clearInterval(timer);
+    timer = startLogOutTimer();
 
     updateUI(currentAccount);
-
-    startLogOutTimer();
   }
 });
 
@@ -294,6 +294,9 @@ btnTransfer.addEventListener('click', function (e) {
     receiverAcc.movements.push(amount);
     receiverAcc.movementsDates.push(dateTr);
     updateUI(currentAccount);
+
+    clearInterval(timer);
+    timer = startLogOutTimer();
   }
 });
 
@@ -308,6 +311,9 @@ btnLoan.addEventListener('click', function (e) {
       currentAccount.movementsDates.push(new Date());
 
       updateUI(currentAccount);
+
+      clearInterval(timer);
+      timer = startLogOutTimer();
     }, 3000);
   }
   inputLoanAmount.value = '';
